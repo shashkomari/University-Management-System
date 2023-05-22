@@ -53,12 +53,12 @@ DROP TABLE IF EXISTS `CourseWork`.`lectures` ;
 
 CREATE TABLE IF NOT EXISTS `CourseWork`.`lectures` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `date` DATETIME NOT NULL,
-  `subjects_id` INT NOT NULL,
-  `teachers_id` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `subject_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_lectures_subject_idx` (`subjects_id` ASC) VISIBLE,
-  INDEX `fk_lectures_teachers1_idx` (`teachers_id` ASC) VISIBLE)
+  INDEX `fk_lectures_subject_idx` (`subject_id` ASC) VISIBLE,
+  INDEX `fk_lectures_teachers1_idx` (`teacher_id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -83,11 +83,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `CourseWork`.`lectures_has_students` ;
 
 CREATE TABLE IF NOT EXISTS `CourseWork`.`lectures_has_students` (
-  `lectures_id` INT NOT NULL,
-  `students_id` INT NOT NULL,
+  `lecture_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
   PRIMARY KEY (`lectures_id`, `students_id`),
-  INDEX `fk_lectures_has_students_students1_idx` (`students_id` ASC) VISIBLE,
-  INDEX `fk_lectures_has_students_lectures1_idx` (`lectures_id` ASC) VISIBLE)
+  INDEX `fk_lectures_has_students_students1_idx` (`student_id` ASC) VISIBLE,
+  INDEX `fk_lectures_has_students_lectures1_idx` (`lecture_id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 

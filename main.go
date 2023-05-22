@@ -1,12 +1,16 @@
 package main
 
 import (
+	"database/sql"
+
 	"github.com/gin-gonic/gin"
 
 	"projects/course-work/handlers"
 	//"projects/course-work/models"
 	"projects/course-work/repositories"
 	"projects/course-work/services"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // type User struct {
@@ -21,16 +25,13 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("html/*")
 	r.Static("/css", "./css/")
-	//output for text
 
-	// var lectures = &[]models.Lecture{
-	// 	{Id: 1, Date: "Blue Train", SubjectId: 1, TeacherId: 56},
-	// 	{Id: 2, Date: "Jeru", SubjectId: 2, TeacherId: 17},
-	// 	{Id: 3, Date: "Sarah Vaughan and Clifford Brown", SubjectId: 3, TeacherId: 39},
-	// }
+	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/CourseWork")
+	if err != nil {
+		panic(err.Error())
+	}
 
-	//var db *sql.DB
-	lectureRepository := repositories.NewLocalLectureRepository() // NewLectureRepository(db)
+	lectureRepository := repositories.NewLectureRepository(db)
 	lectureServices := services.NewLectureService(lectureRepository)
 	lectureHandlers := handlers.NewLectureHttp(lectureServices)
 

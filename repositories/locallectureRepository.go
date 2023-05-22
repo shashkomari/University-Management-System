@@ -7,9 +7,9 @@ import (
 
 func NewLocalLectureRepository() *LocalLectureRepository {
 	db := []models.Lecture{
-		{Id: 1, Date: "20 01 2021", SubjectId: 1, TeacherId: 56},
-		{Id: 2, Date: "11 03 2020", SubjectId: 2, TeacherId: 17},
-		{Id: 3, Date: "12 07 2023", SubjectId: 3, TeacherId: 39},
+		{Id: 1, Date: "2021 01 20", SubjectId: 1, TeacherId: 56},
+		{Id: 2, Date: "2020 03 1", SubjectId: 2, TeacherId: 17},
+		{Id: 3, Date: "2023 07 12", SubjectId: 3, TeacherId: 39},
 	}
 	return &LocalLectureRepository{
 		db:         db,
@@ -38,7 +38,9 @@ func (r *LocalLectureRepository) UpdateLecture(lecture models.Lecture) error {
 
 	for i := 0; i < len(r.db); i++ {
 		if r.db[i].Id == lecture.Id {
-			r.db[i].Date, r.db[i].SubjectId, r.db[i].TeacherId = lecture.Date, lecture.SubjectId, lecture.TeacherId
+			r.db[i].Date = lecture.Date
+			r.db[i].SubjectId = lecture.SubjectId
+			r.db[i].TeacherId = lecture.TeacherId
 			return nil
 		}
 	}
@@ -59,7 +61,10 @@ func (r *LocalLectureRepository) DeleteLecture(id int) error {
 
 func (r *LocalLectureRepository) CreateLecture(lectureData models.LectureData) (int, error) {
 	var lecture models.Lecture
-	lecture.Id, lecture.Date, lecture.SubjectId, lecture.TeacherId = r.id_counter, lectureData.Date, lectureData.SubjectId, lectureData.TeacherId
+	lecture.Id = r.id_counter
+	lecture.Date = lectureData.Date
+	lecture.SubjectId = lectureData.SubjectId
+	lecture.TeacherId = lectureData.TeacherId
 	r.id_counter++
 
 	r.db = append(r.db, lecture)

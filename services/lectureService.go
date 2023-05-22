@@ -98,7 +98,7 @@ func (s *LectureService) GetLectures() ([]models.Lecture, error) {
 }
 
 func checkDate(lectureDate string) error {
-	stringNums := strings.Fields(lectureDate)
+	stringNums := strings.Split(lectureDate, "-")
 
 	if len(stringNums) != 3 {
 		return fmt.Errorf("bad request, check date")
@@ -115,16 +115,17 @@ func checkDate(lectureDate string) error {
 	}
 	fmt.Println(intNums)
 
-	if intNums[0] < 1 || intNums[0] > 31 {
-		return fmt.Errorf("bad request, check day of date")
+	if intNums[0] < 1000 || intNums[0] > 9999 {
+		return fmt.Errorf("bad request, check year of date")
 	}
 
 	if intNums[1] < 1 || intNums[1] > 12 {
 		return fmt.Errorf("bad request, check month of date")
 	}
 
-	if intNums[2] < 1000 || intNums[2] > 9999 {
-		return fmt.Errorf("bad request, check year of date")
+	if intNums[2] < 1 || intNums[2] > 31 {
+		return fmt.Errorf("bad request, check day of date")
 	}
+
 	return nil
 }
