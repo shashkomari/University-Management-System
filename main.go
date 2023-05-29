@@ -6,20 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"projects/course-work/handlers"
-	//"projects/course-work/models"
 	"projects/course-work/repositories"
 	"projects/course-work/services"
 
 	_ "github.com/go-sql-driver/mysql"
 )
-
-// type User struct {
-// 	Title string
-// }
-
-// var hello = []User{
-// 	{"Hello!"},
-// }
 
 func main() {
 	r := gin.Default()
@@ -35,27 +26,41 @@ func main() {
 	lectureServices := services.NewLectureService(lectureRepository)
 	lectureHandlers := handlers.NewLectureHttp(lectureServices)
 
+	studentRepository := repositories.NewStudentRepository(db)
+	studentServices := services.NewStudentService(studentRepository)
+	studentHandlers := handlers.NewStudentHttp(studentServices)
+
+	subjectRepository := repositories.NewSubjectRepository(db)
+	subjectServices := services.NewSubjectService(subjectRepository)
+	subjectHandlers := handlers.NewSubjectHttp(subjectServices)
+
+	teacherRepository := repositories.NewTeacherRepository(db)
+	teacherServices := services.NewTeacherService(teacherRepository)
+	teacherHandlers := handlers.NewTeacherHttp(teacherServices)
+
 	r.GET("/lectures", lectureHandlers.GetLectures)
 	r.GET("/lecture/:id", lectureHandlers.GetLectureById)
 	r.POST("/lecture", lectureHandlers.CreateLecture)
 	r.PUT("/lecture/:id", lectureHandlers.UpdateLecture)
 	r.DELETE("/lecture/:id", lectureHandlers.DeleteLecture)
-	// r.GET("/", func(c *gin.Context) {
-	// 	//c.Data(200, "application/json; charset=utf-8", []byte("WELCOME!"))
-	// 	c.HTML(http.StatusOK, "index.html", gin.H{
-	// 		"title": "Main website",
-	// 	})
-	// })
 
-	//r.POST("/", lectureHandlers.CreateLecture)
+	r.GET("/students", studentHandlers.GetStudents)
+	r.GET("/student/:id", studentHandlers.GetStudentById)
+	r.POST("/student", studentHandlers.CreateStudent)
+	r.PUT("/student/:id", studentHandlers.UpdateStudent)
+	r.DELETE("/student/:id", studentHandlers.DeleteStudent)
 
-	// r.GET("/get", func(c *gin.Context) {
-	//	c.JSON(http.StatusOK, hello)
-	// })
+	r.GET("/subjects", subjectHandlers.GetSubjects)
+	r.GET("/subject/:id", subjectHandlers.GetSubjectById)
+	r.POST("/subject", subjectHandlers.CreateSubject)
+	r.PUT("/subject/:id", subjectHandlers.UpdateSubject)
+	r.DELETE("/subject/:id", subjectHandlers.DeleteSubject)
 
-	// r.POST("/post", func(c *gin.Context) {
-	// 	user := c.DefaultPostForm("user", "unknown")
-	// 	c.String(200, "hello %s", user)
-	// })
+	r.GET("/teachers", teacherHandlers.GetTeachers)
+	r.GET("/teacher/:id", teacherHandlers.GetTeacherById)
+	r.POST("/teacher", teacherHandlers.CreateTeacher)
+	r.PUT("/teacher/:id", teacherHandlers.UpdateTeacher)
+	r.DELETE("/teacher/:id", teacherHandlers.DeleteTeacher)
+
 	r.Run()
 }

@@ -10,10 +10,10 @@ import (
 )
 
 type lectureService interface {
-	CreateLecture(lecture models.LectureData) (int, error)
-	GetLectureById(id int) (models.Lecture, error)
+	CreateLecture(lecture models.LectureData) (int64, error)
+	GetLectureById(id int64) (models.Lecture, error)
 	UpdateLecture(lecture models.Lecture) error
-	DeleteLecture(id int) error
+	DeleteLecture(id int64) error
 	GetLectures() ([]models.Lecture, error)
 }
 
@@ -45,7 +45,7 @@ func (h *LectureHTTP) CreateLecture(c *gin.Context) {
 }
 
 func (h *LectureHTTP) DeleteLecture(c *gin.Context) {
-	lectureId, err := getID(c)
+	lectureId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
@@ -62,7 +62,7 @@ func (h *LectureHTTP) DeleteLecture(c *gin.Context) {
 }
 
 func (h *LectureHTTP) GetLectureById(c *gin.Context) {
-	lectureId, err := getID(c)
+	lectureId, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
@@ -92,12 +92,14 @@ func (h *LectureHTTP) GetLectures(c *gin.Context) {
 
 func (h *LectureHTTP) UpdateLecture(c *gin.Context) {
 	var lecture models.Lecture
-	var err error
-	if lecture.Id, err = getID(c); err != nil {
+
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
+	lecture.Id = id
 
 	if err := c.BindJSON(&lecture); err != nil {
 		log.Println(err)
@@ -112,13 +114,4 @@ func (h *LectureHTTP) UpdateLecture(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{})
-}
-
-func getID(c *gin.Context) (int, error) {
-	stringID := c.Param("id")
-	id, err := strconv.Atoi(stringID)
-	if err != nil {
-		return id, err
-	}
-	return id, nil
 }

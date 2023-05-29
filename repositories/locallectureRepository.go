@@ -13,16 +13,16 @@ func NewLocalLectureRepository() *LocalLectureRepository {
 	}
 	return &LocalLectureRepository{
 		db:         db,
-		id_counter: len(db) + 1,
+		id_counter: int64(len(db) + 1),
 	}
 }
 
 type LocalLectureRepository struct {
 	db         []models.Lecture
-	id_counter int
+	id_counter int64
 }
 
-func (r *LocalLectureRepository) GetLectureById(id int) (models.Lecture, error) {
+func (r *LocalLectureRepository) GetLectureById(id int64) (models.Lecture, error) {
 	lecture := models.Lecture{}
 
 	for i := 0; i < len(r.db); i++ {
@@ -48,7 +48,7 @@ func (r *LocalLectureRepository) UpdateLecture(lecture models.Lecture) error {
 	return fmt.Errorf("data not found")
 }
 
-func (r *LocalLectureRepository) DeleteLecture(id int) error {
+func (r *LocalLectureRepository) DeleteLecture(id int64) error {
 	for i := 0; i < len(r.db); i++ {
 		if r.db[i].Id == id {
 			r.db = append(r.db[:i], r.db[i+1:]...)
@@ -59,7 +59,7 @@ func (r *LocalLectureRepository) DeleteLecture(id int) error {
 	return fmt.Errorf("not found data")
 }
 
-func (r *LocalLectureRepository) CreateLecture(lectureData models.LectureData) (int, error) {
+func (r *LocalLectureRepository) CreateLecture(lectureData models.LectureData) (int64, error) {
 	var lecture models.Lecture
 	lecture.Id = r.id_counter
 	lecture.Date = lectureData.Date

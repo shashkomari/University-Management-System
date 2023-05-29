@@ -8,10 +8,10 @@ import (
 )
 
 type lectureRepository interface {
-	CreateLecture(lecture models.LectureData) (int, error)
-	GetLectureById(id int) (models.Lecture, error)
+	CreateLecture(lecture models.LectureData) (int64, error)
+	GetLectureById(id int64) (models.Lecture, error)
 	UpdateLecture(lecture models.Lecture) error
-	DeleteLecture(id int) error
+	DeleteLecture(id int64) error
 	GetLectures() ([]models.Lecture, error)
 }
 
@@ -25,7 +25,7 @@ func NewLectureService(repository lectureRepository) *LectureService {
 	}
 }
 
-func (s *LectureService) CreateLecture(lecture models.LectureData) (int, error) {
+func (s *LectureService) CreateLecture(lecture models.LectureData) (int64, error) {
 	if err := checkDate(lecture.Date); err != nil {
 		return -1, err
 	}
@@ -42,7 +42,7 @@ func (s *LectureService) CreateLecture(lecture models.LectureData) (int, error) 
 	return id, nil
 }
 
-func (s *LectureService) GetLectureById(id int) (models.Lecture, error) {
+func (s *LectureService) GetLectureById(id int64) (models.Lecture, error) {
 	var lecture models.Lecture
 	var err error
 
@@ -51,7 +51,6 @@ func (s *LectureService) GetLectureById(id int) (models.Lecture, error) {
 	}
 
 	lecture, err = s.repository.GetLectureById(id)
-
 	if err != nil {
 		return lecture, err
 	}
@@ -59,7 +58,7 @@ func (s *LectureService) GetLectureById(id int) (models.Lecture, error) {
 	return lecture, nil
 }
 
-func (s *LectureService) DeleteLecture(id int) error {
+func (s *LectureService) DeleteLecture(id int64) error {
 	if id < 1 {
 		return fmt.Errorf("bad request, check id")
 	}

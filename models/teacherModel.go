@@ -1,9 +1,14 @@
 package models
 
 type Teacher struct {
-	First_name  string
-	Last_name   string
-	Middle_name string
+	Id         int64  `json:"id"`
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	MiddleName string `json:"middle_name"`
 }
 
-type TeacherId int
+type TeacherData struct {
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	MiddleName string `json:"middle_name"`
+}

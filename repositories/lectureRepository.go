@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"projects/course-work/models"
 )
 
@@ -15,50 +16,50 @@ type LectureRepository struct {
 	db *sql.DB
 }
 
-func (r *LectureRepository) GetLectureById(id int) (models.Lecture, error) {
+func (r *LectureRepository) GetLectureById(id int64) (models.Lecture, error) {
 	lecture := models.Lecture{}
 
 	err := r.db.QueryRow("SELECT * FROM lectures WHERE id = ?", id).Scan(&lecture.Id, &lecture.Date, &lecture.SubjectId, &lecture.TeacherId)
-
-	if err != nil && err != sql.ErrNoRows {
-		return models.Lecture{}, err
+	if err != nil {
+		return lecture, err
 	}
+
 	return lecture, nil
 }
 
 func (r *LectureRepository) UpdateLecture(lecture models.Lecture) error {
-	err := r.db.QueryRow("UPDATE lectures SET date = ?, subject_id = ?, teacher_id = ? WHERE id = ?", lecture.Date, lecture.SubjectId, lecture.TeacherId, lecture.Id).Err()
-
-	if err != nil && err != sql.ErrNoRows {
+	res, err := r.db.Exec("UPDATE lectures SET date = ?, subject_id = ?, teacher_id = ? WHERE id = ?", lecture.Date, lecture.SubjectId, lecture.TeacherId, lecture.Id)
+	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (r *LectureRepository) DeleteLecture(id int) error {
-	_, err := r.db.Exec("DELETE FROM lectures WHERE id = ?", id)
-
-	if err != nil && err != sql.ErrNoRows {
-		return err
+	if rf, _ := res.RowsAffected(); rf == 0 {
+		return fmt.Errorf("id not found")
 	}
 
 	return nil
 }
 
-func (r *LectureRepository) CreateLecture(lecture models.LectureData) (int, error) {
-	var id int
+func (r *LectureRepository) DeleteLecture(id int64) error {
+	res, err := r.db.Exec("DELETE FROM lectures WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+	if rf, _ := res.RowsAffected(); rf == 0 {
+		return fmt.Errorf("id not found")
+	}
 
-	_, err := r.db.Exec("INSERT INTO lectures (date, subject_id, teacher_id) VALUES (?, ?, ?)", lecture.Date, lecture.SubjectId, lecture.TeacherId)
+	return nil
+}
+
+func (r *LectureRepository) CreateLecture(lecture models.LectureData) (int64, error) {
+	var id int64
+
+	res, err := r.db.Exec("INSERT INTO lectures (date, subject_id, teacher_id) VALUES (?, ?, ?)", lecture.Date, lecture.SubjectId, lecture.TeacherId)
 	if err != nil {
 		return id, err
 	}
 
-	err = r.db.QueryRow("SELECT last_insert_id()").Scan(&id)
-	if err != nil {
-		return id, err
-	}
-
-	return id, nil
+	return res.LastInsertId()
 }
 
 func (r *LectureRepository) GetLectures() ([]models.Lecture, error) {
@@ -78,5 +79,6 @@ func (r *LectureRepository) GetLectures() ([]models.Lecture, error) {
 		}
 		lectures = append(lectures, lecture)
 	}
+
 	return lectures, nil
 }

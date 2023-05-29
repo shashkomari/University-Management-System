@@ -1,9 +1,14 @@
 package models
 
 type Subject struct {
-	Name     string
-	Course   int
-	Semester int
+	Id       int64  `json:"id"`
+	Name     string `json:"name"`
+	Course   int    `json:"course"`
+	Semester int    `json:"semester"`
 }
 
-type SubjectId int
+type SubjectData struct {
+	Name     string `json:"name"`
+	Course   int    `json:"course"`
+	Semester int    `json:"semester"`
+}
