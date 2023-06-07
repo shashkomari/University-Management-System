@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
@@ -38,29 +39,41 @@ func main() {
 	teacherServices := services.NewTeacherService(teacherRepository)
 	teacherHandlers := handlers.NewTeacherHttp(teacherServices)
 
-	r.GET("/lectures", lectureHandlers.GetLectures)
-	r.GET("/lecture/:id", lectureHandlers.GetLectureById)
-	r.POST("/lecture", lectureHandlers.CreateLecture)
-	r.PUT("/lecture/:id", lectureHandlers.UpdateLecture)
-	r.DELETE("/lecture/:id", lectureHandlers.DeleteLecture)
+	r.GET("/api/lectures", lectureHandlers.GetLectures)
+	r.GET("/api/lecture/:id", lectureHandlers.GetLectureById)
+	r.POST("/api/lecture", lectureHandlers.CreateLecture)
+	r.PUT("/api/lecture/:id", lectureHandlers.UpdateLecture)
+	r.DELETE("/api/lecture/:id", lectureHandlers.DeleteLecture)
 
-	r.GET("/students", studentHandlers.GetStudents)
-	r.GET("/student/:id", studentHandlers.GetStudentById)
-	r.POST("/student", studentHandlers.CreateStudent)
-	r.PUT("/student/:id", studentHandlers.UpdateStudent)
-	r.DELETE("/student/:id", studentHandlers.DeleteStudent)
+	r.GET("/api/students", studentHandlers.GetStudents)
+	r.GET("/api/student/:id", studentHandlers.GetStudentById)
+	r.POST("/api/student", studentHandlers.CreateStudent)
+	r.PUT("/api/student/:id", studentHandlers.UpdateStudent)
+	r.DELETE("/api/student/:id", studentHandlers.DeleteStudent)
 
-	r.GET("/subjects", subjectHandlers.GetSubjects)
-	r.GET("/subject/:id", subjectHandlers.GetSubjectById)
-	r.POST("/subject", subjectHandlers.CreateSubject)
-	r.PUT("/subject/:id", subjectHandlers.UpdateSubject)
-	r.DELETE("/subject/:id", subjectHandlers.DeleteSubject)
+	r.GET("/api/subjects", subjectHandlers.GetSubjects)
+	r.GET("/api/subject/:id", subjectHandlers.GetSubjectById)
+	r.POST("/api/subject", subjectHandlers.CreateSubject)
+	r.PUT("/api/subject/:id", subjectHandlers.UpdateSubject)
+	r.DELETE("/api/subject/:id", subjectHandlers.DeleteSubject)
 
-	r.GET("/teachers", teacherHandlers.GetTeachers)
-	r.GET("/teacher/:id", teacherHandlers.GetTeacherById)
-	r.POST("/teacher", teacherHandlers.CreateTeacher)
-	r.PUT("/teacher/:id", teacherHandlers.UpdateTeacher)
-	r.DELETE("/teacher/:id", teacherHandlers.DeleteTeacher)
+	r.GET("/api/teachers", teacherHandlers.GetTeachers)
+	r.GET("/api/teacher/:id", teacherHandlers.GetTeacherById)
+	r.POST("/api/teacher", teacherHandlers.CreateTeacher)
+	r.PUT("/api/teacher/:id", teacherHandlers.UpdateTeacher)
+	r.DELETE("/api/teacher/:id", teacherHandlers.DeleteTeacher)
 
+	r.GET("/lectures", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "lectures.html", gin.H{})
+	})
+	r.GET("/students", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "students.html", gin.H{})
+	})
+	r.GET("/subjects", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "subjects.html", gin.H{})
+	})
+	r.GET("/teachers", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "teachers.html", gin.H{})
+	})
 	r.Run()
 }

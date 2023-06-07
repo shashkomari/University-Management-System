@@ -54,11 +54,11 @@ func (h *StudentHTTP) DeleteStudent(c *gin.Context) {
 
 	if err := h.studentService.DeleteStudent(studentId); err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusGone, gin.H{})
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *StudentHTTP) GetStudentById(c *gin.Context) {
@@ -72,11 +72,11 @@ func (h *StudentHTTP) GetStudentById(c *gin.Context) {
 	student, err := h.studentService.GetStudentById(studentId)
 	if err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, student)
+	c.IndentedJSON(http.StatusFound, student)
 }
 
 func (h *StudentHTTP) GetStudents(c *gin.Context) {

@@ -54,11 +54,11 @@ func (h *LectureHTTP) DeleteLecture(c *gin.Context) {
 
 	if err := h.lectureService.DeleteLecture(lectureId); err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusGone, gin.H{})
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *LectureHTTP) GetLectureById(c *gin.Context) {
@@ -70,13 +70,13 @@ func (h *LectureHTTP) GetLectureById(c *gin.Context) {
 	}
 
 	lecture, err := h.lectureService.GetLectureById(lectureId)
-	if err != nil {
+	if err != nil { // TODO: add more error options
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, lecture)
+	c.IndentedJSON(http.StatusFound, lecture)
 }
 
 func (h *LectureHTTP) GetLectures(c *gin.Context) {

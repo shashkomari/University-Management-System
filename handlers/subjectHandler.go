@@ -54,11 +54,11 @@ func (h *SubjectHTTP) DeleteSubject(c *gin.Context) {
 
 	if err := h.subjectService.DeleteSubject(subjectId); err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusGone, gin.H{})
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *SubjectHTTP) GetSubjectById(c *gin.Context) {
@@ -72,11 +72,11 @@ func (h *SubjectHTTP) GetSubjectById(c *gin.Context) {
 	subject, err := h.subjectService.GetSubjectById(subjectId)
 	if err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, subject)
+	c.IndentedJSON(http.StatusFound, subject)
 }
 
 func (h *SubjectHTTP) GetSubjects(c *gin.Context) {

@@ -54,11 +54,11 @@ func (h *TeacherHTTP) DeleteTeacher(c *gin.Context) {
 
 	if err := h.teacherService.DeleteTeacher(teacherId); err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusGone, gin.H{})
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *TeacherHTTP) GetTeacherById(c *gin.Context) {
@@ -72,11 +72,11 @@ func (h *TeacherHTTP) GetTeacherById(c *gin.Context) {
 	teacher, err := h.teacherService.GetTeacherById(teacherId)
 	if err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, teacher)
+	c.IndentedJSON(http.StatusFound, teacher)
 }
 
 func (h *TeacherHTTP) GetTeachers(c *gin.Context) {
